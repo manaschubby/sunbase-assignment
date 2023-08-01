@@ -1,95 +1,77 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import styles from "./page.module.css";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useRef } from "react";
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+export default function LoginPage() {
+	const AuthAPI =
+		"https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp";
+	const API = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp";
+	const username = useRef<HTMLInputElement | null>(null);
+	const password = useRef<HTMLInputElement | null>(null);
+	const router = useRouter();
+	useEffect(() => {
+		const token = localStorage.getItem("token");
+		if (token) {
+			router.push("/home");
+		}
+	}, []);
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		if (
+			(username.current && !username.current.value) ||
+			(password.current && !password.current.value)
+		) {
+			alert("Please fill in all fields");
+			return;
+		} else if (
+			username.current &&
+			username.current.value &&
+			password.current &&
+			password.current.value
+		) {
+			var myHeaders = new Headers();
+			myHeaders.append("Accept", "*/*");
+			myHeaders.append("Access-Control-Allow-Origin", "http://localhost:3000");
+			myHeaders.append("Content-Type", "application/json");
+			myHeaders.append("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+			myHeaders.append("Access-Control-Allow-Headers", "Content-Type");
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+			var raw = JSON.stringify({
+				login_id: "test@sunbasedata.com",
+				password: "Test@123",
+			});
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+			fetch("/api", { method: "POST", headers: myHeaders, body: raw })
+				.then((response) => response.json())
+				.then((result) => localStorage.setItem("token", result.access_token))
+				.catch((error) => console.log("error", error));
+		}
+	};
+	return (
+		<div className={styles.loginPage}>
+			<div className={styles.loginForm}>
+				<div className={styles.loginFormHeader}>Login</div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+				<form className={styles.loginFormBody} onSubmit={handleSubmit}>
+					<input
+						ref={username}
+						className={styles.loginFormInput}
+						type="text"
+						placeholder="Username"
+					/>
+					<input
+						ref={password}
+						className={styles.loginFormInput}
+						type="password"
+						placeholder="Password"
+					/>
+					<button className={styles.loginFormButton} type="submit">
+						Login
+					</button>
+				</form>
+			</div>
+		</div>
+	);
 }
