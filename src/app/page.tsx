@@ -45,7 +45,10 @@ export default function LoginPage() {
 
 			fetch("/api", { method: "POST", headers: myHeaders, body: raw })
 				.then((response) => response.json())
-				.then((result) => localStorage.setItem("token", result.access_token))
+				.then((result) => {
+					localStorage.setItem("token", result.access_token);
+					window.location.reload();
+				})
 				.catch((error) => console.log("error", error));
 		}
 	};
