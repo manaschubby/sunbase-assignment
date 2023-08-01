@@ -70,7 +70,7 @@ export default function App(props: IAppProps) {
 			})
 			.then((response) => {
 				console.log(response.data);
-				setCustomers(customers.filter((customer) => customer.uuid !== uuid));
+				window.location.reload();
 			})
 			.catch((error) => {
 				console.log(error);
