@@ -25,6 +25,12 @@
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
+.loginFormBody{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .loginForm input{
     width: 100%;
     height: 2rem;
@@ -43,4 +49,22 @@
     color: #fff;
     font-weight: 700;
     cursor: pointer;
+}
+
+.loading{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+.loading>div{
+    padding: 10px;
+    background-color: #fff;
+    color: #000;
+    font-weight: 700;
+    border-radius: 5px;
 }

@@ -234,37 +234,31 @@ export default function App(props: IAppProps) {
 						/>
 						<input
 							ref={address}
-							required
 							className={styles.addModalInput}
 							placeholder="Address"
 						/>
 						<input
 							ref={street}
-							required
 							className={styles.addModalInput}
 							placeholder="Street"
 						/>
 						<input
 							ref={city}
-							required
 							className={styles.addModalInput}
 							placeholder="City"
 						/>
 						<input
 							ref={state}
-							required
 							className={styles.addModalInput}
 							placeholder="State"
 						/>
 						<input
 							ref={phone}
-							required
 							className={styles.addModalInput}
 							placeholder="Phone"
 						/>
 						<input
 							ref={email}
-							required
 							className={styles.addModalInput}
 							placeholder="Email"
 						/>

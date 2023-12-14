@@ -2,12 +2,10 @@
 import styles from "./page.module.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useRef } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 export default function LoginPage() {
-	const AuthAPI =
-		"https://qa2.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp";
-	const API = "https://qa2.sunbasedata.com/sunbase/portal/api/assignment.jsp";
+	const [loading, setLoading] = useState(false);
 	const username = useRef<HTMLInputElement | null>(null);
 	const password = useRef<HTMLInputElement | null>(null);
 	const router = useRouter();
@@ -18,6 +16,7 @@ export default function LoginPage() {
 		}
 	}, []);
 	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		setLoading(true);
 		event.preventDefault();
 		if (
 			(username.current && !username.current.value) ||
@@ -47,14 +46,25 @@ export default function LoginPage() {
 				.then((response) => response.json())
 				.then((result) => {
 					localStorage.setItem("token", result.access_token);
-					window.location.reload();
+					window.location.href = "/home";
+					setLoading(false);
 				})
-				.catch((error) => console.log("error", error));
+				.catch((error) => {
+					setLoading(false);
+					alert("Please enter valid credentials. Error Signing in");
+				});
 		}
 	};
 	return (
 		<div className={styles.loginPage}>
 			<div className={styles.loginForm}>
+				{
+					loading && (
+						<div className={styles.loading}>
+							<div>Loading </div>
+						</div>
+					)
+				}
 				<div className={styles.loginFormHeader}>Login</div>
 
 				<form className={styles.loginFormBody} onSubmit={handleSubmit}>
